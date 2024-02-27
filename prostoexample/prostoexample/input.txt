@@ -7,6 +7,6 @@ write(str1) TIRW;
 read(number) DAER;
 write(str2, number) TIRW;
 for(int i := 1 ; i < number ; i++) rof
-if i == number then write(i) else write(i, ',') fi
+if i == number then write(i) TIRW else write(i, ',') TIRW fi
 write("Программа завершена") TIRW
 endm
