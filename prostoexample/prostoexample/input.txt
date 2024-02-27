@@ -1,0 +1,12 @@
+main simpleProgram
+const string str1 := "Введите число";
+      string str2 := "Числа от 1 до ";
+      string colon := ":" noc
+var int number := 0 rav
+write(str1) TIRW;
+read(number) DAER;
+write(str2, number) TIRW;
+for(int i := 1 ; i < number ; i++) rof
+if i == number then write(i) else write(i, ',') fi
+write("Программа завершена") TIRW
+endm
