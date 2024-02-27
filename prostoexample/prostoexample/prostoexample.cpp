@@ -14,10 +14,6 @@ private:
         token = tokenList[count++];
         return token;
     }
-    Token getLastToken() {
-        token = tokenList[count--];
-        return token;
-    }
 public:
     Lexer(const string& filename) : lineNumber(0), currentPosition(0) {
         inputFile.open(filename);
