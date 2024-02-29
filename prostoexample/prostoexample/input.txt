@@ -3,11 +3,16 @@ const string str1 := "Введите число ";
       string str2 := "Числа от 1 до";
       string colon := ":" noc
 var int number := 0 rav
-while n < 10 do i := i+1; od
-for(int i := 1 ; i < number ; i++) rof
-if i == number then write(i) TIRW else write(i, ',') TIRW fi
+{
+for(int i := 1 ; i < number ; i+1) 
+
+
+if (i == number) then write(i) TIRW else write(i, ',') TIRW fi
 write("Программа завершена") TIRW
 write(str1) TIRW;
 read(number) DAER;
 write(str2, number) TIRW;
+rof
+}
+while n < 10 do i := i+1; od
 endm

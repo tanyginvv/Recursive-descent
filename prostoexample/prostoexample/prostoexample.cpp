@@ -200,10 +200,10 @@ public:
         {
             F();
         }
-        else if (token == Token::LParen)
+        else if (token == Token::OpBracket)
         {
             SimpleExpr();
-            if (token == Token::RParen) {
+            if (token == Token::ClBracket) {
                 return;
             }
             else
@@ -308,9 +308,9 @@ public:
         case Token::Read:
             Read();
             break;
-        //case Token::OpBracket://ЗАЧЕМ??????????????
-        //    ListStms();
-        //    break;
+        case Token::OBracket://ЗАЧЕМ?????????????? понял зачем
+            ListStms();
+            break;
         default:
             break;
         }
@@ -321,10 +321,10 @@ public:
 
         //token = GetToken();
 
-        //if (token != Token::ClBracket)//ПОЧЕМУ ТУТ СКОБКА ЗАКРЫВАЮЩАЯ
-        //{
-        //    ListStms();
-        //}
+        if (token != Token::CBracket)//ПОЧЕМУ ТУТ СКОБКА ЗАКРЫВАЮЩАЯ
+        {
+            ListStms();
+        }
     }
     //readwrite
     void ListId()
@@ -406,7 +406,7 @@ public:
             throw exception("Expected 'do'");
         }
         ListStms();
-        if (token == Token::Od)
+        if (token == Token::Od)//НЕ ВОЗВРАЩАЕТСЯ В OD
         {
             throw exception("Expected 'od'");
         }
@@ -414,9 +414,9 @@ public:
     //for
     void For()
     {
-        if (GetToken() != Token::For)
+        if (GetToken() != Token::OpBracket)
         {
-            throw exception("Expected 'for'");
+            throw exception("Expected 'OpBracket'");
         }
         if (GetToken() != Token::Type)
         {
@@ -431,12 +431,12 @@ public:
             throw exception("Expected assignment");
         }
         Expr();
-        if (GetToken() != Token::Comma)
+        if (token != Token::Semicolon)
         {
-            throw exception("Expected comma");
+            throw exception("Expected semicolon");
         }
         Expr();
-        if (GetToken() != Token::Comma)
+        if (token != Token::Semicolon)
         {
             throw exception("Expected comma");
         }
@@ -459,14 +459,14 @@ public:
     }
 
     void parseSt() {
-        ListStms();// Анализ основных инструкций программы
+        St();// Анализ основных инструкций программы
     }
 
     void parse() {
             lineNumber++;
             currentPosition = 0;
             Process(inputFile, outputFile, tokenList);
-           parseConsts();
+            parseConsts();
             parseVariables();
             parseSt();
             printTokens(tokenList);
