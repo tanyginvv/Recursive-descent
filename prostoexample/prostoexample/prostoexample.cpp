@@ -86,7 +86,7 @@ public:
             )
             Expr();
         else
-            throw exception("section const error1");
+            throw exception("section const error");
     }
 
     void ListSectionsConst()
@@ -97,13 +97,13 @@ public:
         else if (token == Token::Type)
         {
             SectionConst();
-           // token = GetToken();
+          //  token = GetToken();
             if (token == Token::Noc)
                 return;
-            else if (GetToken() == Token::Semicolon)
+            else if (token == Token::Semicolon)
                 ListSectionsConst();
             else
-                throw exception("section const error");
+                throw exception("section const error1");
 
         }
     }
@@ -116,7 +116,7 @@ public:
 
         }
         ListSectionsConst();
-        if (GetToken() != Token::Noc)
+        if (token != Token::Noc)
         {
             throw exception("expected 'Noc'");
         }
@@ -130,7 +130,7 @@ public:
 
     void TermPrime()
     {
-        token = GetToken();
+     //   token = GetToken();
         if (CheckMul())
         {
             F();
@@ -176,7 +176,7 @@ public:
 
     void ExprPrime()
     {
-        token = GetToken();
+     //   token = GetToken();
         if (CheckRelation())
         {
             SimpleExpr();
@@ -211,7 +211,16 @@ public:
                 throw exception("f error");
             }
         }
-
+        else if (
+            token == Token::Numb
+            || token == Token::Ident || token == Token ::String || token == Token::Char
+            )
+        {
+            token = GetToken();
+            return;
+        }
+        else
+            throw exception("f error");
     }
     //if
     void Assign()
@@ -322,8 +331,12 @@ public:
     {
         if (GetToken() != Token::Ident)
             throw exception("expected 'Ident'");
-        if (GetToken() == Token::Comma)
+        if (GetToken() == Token::Comma) {
             ListId();
+        }
+        else if ( token == Token::Ident) {
+            throw exception("expected comma");
+        }
     }
 
     void Read()
@@ -348,16 +361,13 @@ public:
         {
             token = GetToken();
         }
-        else if (token == Token::Quote)
+        else if (GetToken() != Token::String)
         {
-            if (GetToken() != Token::String) {
-                throw exception("expected 'String'");
-            }
-            else
-                token = GetToken();
+            throw exception("expected 'String'");
         }
-        else {
-            throw exception("expected 'Ident' or 'string literal'");
+        else
+        {
+            token = GetToken();    
         }
     }
 
@@ -376,7 +386,7 @@ public:
         }
         ListWrite();
 
-        if (GetToken() != Token::ClBracket) {
+        if (token != Token::ClBracket) {
             throw exception("expected ')'");
         }
         if (GetToken() != Token::Tirw) {
@@ -449,16 +459,17 @@ public:
     }
 
     void parseSt() {
-        // Анализ основных инструкций программы
+        ListStms();// Анализ основных инструкций программы
     }
 
     void parse() {
             lineNumber++;
             currentPosition = 0;
             Process(inputFile, outputFile, tokenList);
-            parseConsts();
+         /*   parseConsts();
             parseVariables();
-            parseSt();
+            parseSt();*/
+            printTokens(tokenList);
 
     }
     void printTokens(const vector<Token>& tokenList) {

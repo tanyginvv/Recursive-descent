@@ -1,6 +1,6 @@
 main simpleProgram
-const string str1 := "Введите число";
-      string str2 := "Числа от 1 до ";
+const string str1 := "Введите число ";
+      string str2 := "Числа от 1 до";
       string colon := ":" noc
 var int number := 0 rav
 write(str1) TIRW;
