@@ -235,7 +235,7 @@ public:
 
         Expr();
 
-        token = GetToken();
+        //token = GetToken();
 
         if (token != Token::Semicolon)
         {
@@ -308,9 +308,9 @@ public:
         case Token::Read:
             Read();
             break;
-        case Token::OpBracket:
-            ListStms();
-            break;
+        //case Token::OpBracket://ЗАЧЕМ??????????????
+        //    ListStms();
+        //    break;
         default:
             break;
         }
@@ -319,12 +319,12 @@ public:
     {
         St();
 
-        token = GetToken();
+        //token = GetToken();
 
-        if (token != Token::ClBracket)
-        {
-            ListStms();
-        }
+        //if (token != Token::ClBracket)//ПОЧЕМУ ТУТ СКОБКА ЗАКРЫВАЮЩАЯ
+        //{
+        //    ListStms();
+        //}
     }
     //readwrite
     void ListId()
@@ -335,7 +335,7 @@ public:
             ListId();
         }
         else if ( token == Token::Ident) {
-            throw exception("expected comma");
+            throw exception("expected comma");//обработка если нет запятой и за запятой любая белеберда!!!!!
         }
     }
 
@@ -353,7 +353,7 @@ public:
             throw exception("expected 'Daer'");
         }
     }
-
+    //Говно переделывай добавить обработку запятой могут быть несколько идентификаторов или строк некоторые gettoken пропускают
     void ElemWrite()
     {
         token = GetToken();
@@ -361,7 +361,7 @@ public:
         {
             token = GetToken();
         }
-        else if (GetToken() != Token::String)
+        else if (GetToken() != Token::String )//char пропускаем если не идентификатор теряем токен
         {
             throw exception("expected 'String'");
         }
@@ -396,17 +396,17 @@ public:
 
     //while
     void While() {
-        if (GetToken() != Token::While)
+      /*  if (GetToken() != Token::While)
         {
             throw exception("Expected 'while'");
-        }
+        }*/
         Expr();
-        if (GetToken() != Token::Do)
+        if (token != Token::Do)
         {
             throw exception("Expected 'do'");
         }
         ListStms();
-        if (GetToken() != Token::Od)
+        if (token == Token::Od)
         {
             throw exception("Expected 'od'");
         }
@@ -466,9 +466,9 @@ public:
             lineNumber++;
             currentPosition = 0;
             Process(inputFile, outputFile, tokenList);
-         /*   parseConsts();
+           parseConsts();
             parseVariables();
-            parseSt();*/
+            parseSt();
             printTokens(tokenList);
 
     }
