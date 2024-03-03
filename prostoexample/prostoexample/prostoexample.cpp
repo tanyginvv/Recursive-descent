@@ -308,20 +308,21 @@ public:
         case Token::Read:
             Read();
             break;
-        case Token::OBracket://ЗАЧЕМ?????????????? понял зачем
-            ListStms();
-            break;
+        //case Token::OBracket://ЗАЧЕМ?????????????? понял зачем
+        //    ListStms();
+        //    break;
         default:
             break;
         }
     }
     void ListStms()
     {
+              
         St();
 
         //token = GetToken();
 
-        if (token != Token::CBracket)//ПОЧЕМУ ТУТ СКОБКА ЗАКРЫВАЮЩАЯ
+        if (token != Token::CBracket)
         {
             ListStms();
         }
@@ -459,7 +460,10 @@ public:
     }
 
     void parseSt() {
-        St();// Анализ основных инструкций программы
+        if (GetToken() != Token::OBracket) {
+            throw exception("expected {");
+        }
+        ListStms();// Анализ основных инструкций программы
     }
 
     void parse() {
@@ -477,191 +481,11 @@ public:
             cout << "Token: " << tokenToStringFunc(token) << endl;
         }
     }
-    bool MakeToken(string& word, int indexStr, size_t position, deque<string>& vectorOfStringAndChar, ofstream& outputFile, vector<Token>& tokenList)
-    {
-        if (word == "")
-        {
-            return false;
-        }
+    bool MakeToken(string& word, int indexStr, size_t position, deque<string>& vectorOfStringAndChar, ofstream& outputFile, vector<Token>& tokenList);
 
-        for (auto& item : keywords)
-        {
-            size_t index = word.find(item.first);
-            if (index != string::npos)
-            {
-                word.erase(index, item.first.size());
-                string secondStr = word.substr(index, word.size() - index);
-                word = word.substr(0, index);
-                MakeToken(word, indexStr, position, vectorOfStringAndChar, outputFile, tokenList);
-                tokenList.push_back(item.second);
-                MakeToken(secondStr, indexStr, position + index + word.size(), vectorOfStringAndChar, outputFile, tokenList);
-                return true;
-            }
-        }
+    void processStringAndChar(deque<string>& vectorOfStringAndChar, string& inputStr, size_t indexStart);
 
-        for (auto& item : separators)
-        {
-            size_t index = word.find(item.first);
-            if (index != string::npos)
-            {
-                word.erase(index, item.first.size());
-                string secondStr = word.substr(index, word.size() - index);
-                word = word.substr(0, index);
-                MakeToken(word, indexStr, position, vectorOfStringAndChar, outputFile, tokenList);
-                tokenList.push_back(item.second);
-                MakeToken(secondStr, indexStr, position + index + word.size(), vectorOfStringAndChar, outputFile, tokenList);
-                return true;
-            }
-        }
-
-        for (auto& item : Relation)
-        {
-            size_t index = word.find(item.first);
-            if (index != string::npos)
-            {
-                word.erase(index, item.first.size());
-                string secondStr = word.substr(index, word.size() - index);
-                word = word.substr(0, index);
-                MakeToken(word, indexStr, position, vectorOfStringAndChar, outputFile, tokenList);
-                tokenList.push_back(item.second);
-                MakeToken(secondStr, indexStr, position + index + word.size(), vectorOfStringAndChar, outputFile, tokenList);
-                return true;
-            }
-        }
-
-        if (word.front() == '\"' && word.back() == '\"')
-        {
-            tokenList.push_back(Token::String);
-            return true;
-        }
-        else if (word.front() == '\'' && word.back() == '\'')
-        {
-            tokenList.push_back(Token::Char);
-            return true;
-        }
-
-
-        //numbers
-        if (word.find_first_not_of("0123456789.") == string::npos)
-        {
-            tokenList.push_back(Token::Numb);
-            return true;
-        }
-
-        Token output;
-        if (keywords.find(word) != keywords.end())
-        {
-            output = keywords[word];
-            tokenList.push_back(output);
-            return true;
-        }
-
-        if (separators.find(word) != separators.end())
-        {
-            output = separators[word];
-            tokenList.push_back(output);
-            return true;
-        }
-
-        if (word == "\"" && !vectorOfStringAndChar.empty())
-        {
-            word = vectorOfStringAndChar[0];
-            vectorOfStringAndChar.pop_front();
-            size_t i = word.find("\"") + 1;
-            if (i < word.size() && word.find("\"", i) != string::npos)
-            {
-                tokenList.push_back(Token::Type);
-            }
-            else
-            {
-                outputFile << word << indexStr << " --- position " << position << "\n";
-            }
-            return true;
-        }
-
-        if (word == "\'" && !vectorOfStringAndChar.empty())
-        {
-            word = vectorOfStringAndChar[0];
-            vectorOfStringAndChar.pop_front();
-            size_t i = word.find("\'") + 1;
-            if (i < word.size() && word.find("\'", i) != string::npos && word.size() == 3)
-            {
-                tokenList.push_back(Token::Type);
-            }
-            else
-            {
-                outputFile << word << indexStr << " --- position " << position << "\n";
-            }
-            return true;
-        }
-
-        if (isalpha(word[0]) || word[0] == '_') {
-            for (auto i = 1; i < word.size(); i++) {
-                if (!isalnum(word[i]) && word[i] != '_') {
-                    outputFile << word << indexStr << " --- position " << position << "\n";
-                    return true;
-                }
-            }
-
-            tokenList.push_back(Token::Ident);
-            return true;
-        }
-
-        outputFile << word << indexStr << " --- position " << position << "\n";
-    }
-
-    void processStringAndChar(deque<string>& vectorOfStringAndChar, string& inputStr, size_t indexStart)
-    {
-        if (inputStr.find("\"", indexStart) != string::npos)
-        {
-            string str;
-            size_t start = inputStr.find("\"", indexStart);
-            size_t end = inputStr.size() - 1;
-            if (start + 1 < inputStr.size() && inputStr.find("\"", start + 1) != string::npos)
-            {
-                end = inputStr.find("\"", start + 1);
-            }
-            str = inputStr.substr(start, end - start + 1);
-            vectorOfStringAndChar.push_back(str);
-            inputStr.erase(start + 1, end - start);
-
-            processStringAndChar(vectorOfStringAndChar, inputStr, start + 1);
-        }
-        if (inputStr.find("\'", indexStart) != string::npos)
-        {
-            string str;
-            size_t start = inputStr.find("\'", indexStart);
-            size_t end = inputStr.size() - 1;
-            if (start + 1 < inputStr.size() and inputStr.find("\'", start + 1) != string::npos)
-            {
-                end = inputStr.find("\'", start + 1);
-            }
-            str = inputStr.substr(start, end - start + 1);
-            vectorOfStringAndChar.push_back(str);
-            inputStr.erase(start + 1, end - start);
-
-            processStringAndChar(vectorOfStringAndChar, inputStr, start + 1);
-        }
-    }
-
-    void ProcessStr(ifstream& inputFile, string& inputStr, int& indexStr, ofstream& outputFile, vector<Token>& tokenList)
-    {
-        deque<string> vectorOfStringAndChar;
-        processStringAndChar(vectorOfStringAndChar, inputStr, 0);
-
-        size_t position = 1;
-        if (!inputStr.empty())
-        {
-            vector<string> words;
-            string item;
-            istringstream strStream(inputStr);
-            while (getline(strStream, item, ' '))
-            {
-                MakeToken(item, indexStr, position, vectorOfStringAndChar, outputFile, tokenList);
-                position += item.size() + 1;
-            }
-        }
-    }
+    void ProcessStr(ifstream& inputFile, string& inputStr, int& indexStr, ofstream& outputFile, vector<Token>& tokenList);
 
     void Process(ifstream& input, ofstream& output, vector<Token>& tokenList) {
         string inputStr, inputString;
@@ -696,4 +520,3 @@ int main()
     lexer.printTokens(tokenList);
     return 0;
 }
-
