@@ -7,12 +7,12 @@ var int number := 0 rav
 for(int i := 1 ; i < number ; i+1) 
 
 
-if (i == number) then write(i) TIRW else write(i, ',') TIRW fi
+if i == number then write(i) TIRW else write(i) TIRW fi
 write("Программа завершена") TIRW
-write(str1) TIRW;
-read(number) DAER;
-write(str2, number) TIRW;
+write(str1) TIRW
+}
 rof
 }
+endm
 while n < 10 do i := i+1; od
 endm
