@@ -53,6 +53,11 @@ enum class Token {
     String,
     Char,
     Main,
+    Default,
+    Case,
+    Switch,
+    Colon,
+    Break,
 };
 map<Token, string> tokenToString = {
     {Token::Const, "Const"},
@@ -99,7 +104,12 @@ map<Token, string> tokenToString = {
     {Token::Char, "Char"},
     {Token::Noc, "Noc"},
     {Token::Eof, "EOF"},
-    {Token::Main, "Main" }
+    {Token::Main, "Main"},
+    {Token::Default, "Default"},
+    {Token::Colon, "Colon"},
+    {Token::Case, "Case"},
+    {Token::Switch, "Switch"},
+    {Token::Break, "Break"},
 };
 
 string toLower(string str) {
@@ -133,7 +143,11 @@ std::map<std::string, Token> keywords = {
     std::make_pair(toLower("mod"), Token::Mod),
     std::make_pair(toLower("var"), Token::Var),
     std::make_pair(toLower("rav"), Token::Rav),
-    std::make_pair(toLower("/"), Token::Divine)
+    std::make_pair(toLower("/"), Token::Divine),
+    std::make_pair(toLower("break"), Token::Break),
+    std::make_pair(toLower("default"), Token::Default),
+    std::make_pair(toLower("case"), Token::Case),
+    std::make_pair(toLower("switch"), Token::Switch)
 };
 
 std::map<std::string, Token> separators = {
@@ -148,7 +162,8 @@ std::map<std::string, Token> separators = {
     std::make_pair(toLower("+"), Token::Plus),
     std::make_pair(toLower("-"), Token::Minus),
     std::make_pair(toLower("or"), Token::Or),
-    std::make_pair(toLower(":="), Token::Assignment)
+    std::make_pair(toLower(":="), Token::Assignment),
+    std::make_pair(toLower(":>"), Token::Colon)
 };
 std::map<std::string, Token> Relation = {
     std::make_pair("==", Token::Relation),
@@ -467,6 +482,9 @@ public:
             break;
         case Token::Read:
             Read();
+            break;
+        case Token::Switch:
+            SwitchCase();
             break;
         case Token::CBracket:
             break;
@@ -865,6 +883,86 @@ public:
 
         tokenList.push_back(Token::Eof);
         output << "EOF --- End of File\n";
+    }
+
+    void CaseBody()
+    {
+        if (GetToken() == Token::Colon)
+        {
+            St();
+            if (GetToken() == Token::Semicolon &&
+                GetToken() == Token::Break &&
+                GetToken() == Token::Semicolon)
+            {
+                return;
+            }
+            else
+            {
+                throw exception("Expected sequence '; break ;' after statement");
+            }
+        }
+        else
+        {
+            throw exception("Expected sequence 'ident :' inside switch case");
+        }
+    }
+
+    void SwitchCase()
+    {
+        if (token == Token::Switch && GetToken() == Token::Ident && GetToken() == Token::OBracket)
+        {
+            const unsigned CaseCountLimit = 1000;
+            for (unsigned caseNumber = 0; caseNumber <= CaseCountLimit; caseNumber++)
+            {
+                token = GetToken();
+                if (token == Token::CBracket)
+                {
+                    if (caseNumber == 0)
+                    {
+                        throw exception("Expected min 1 case or default case inside switch case body!'");
+                    }
+                    return;
+                } 
+                else if (caseNumber == CaseCountLimit)
+                {
+                    string msg = "Error: Out of switch case range! Max available cases count ";
+                    stringstream ss;
+                    ss << msg << CaseCountLimit;
+                    throw exception(ss.str().c_str());
+                }
+                else if (token == Token::Default)
+                {
+                    CaseBody();
+                    if (GetToken() == Token::CBracket)
+                    {
+                        return;
+                    } 
+                    else
+                    {
+                        throw exception("Expected '}' after default case !'");
+                    }
+                }
+                else if (token == Token::Case)
+                {
+                    if (GetToken() == Token::Ident)
+                    {
+                        CaseBody();
+                    }
+                    else
+                    {
+                        throw exception("Expected ident after 'case'");
+                    }
+                }
+                else
+                {
+                    throw exception("Expected 'case' or 'default' inside switch case");
+                }
+            }
+        }
+        else
+        {
+            throw exception("Expected sequence 'switch ident {'");
+        }
     }
 };
 int main()
