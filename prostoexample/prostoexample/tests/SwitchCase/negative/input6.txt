@@ -10,7 +10,7 @@ switch number {
 	case zero :> write(zero) TIRW; break;
 	default :> write(zero) TIRW break;
 }
-
+}
 endm
 while n < 10 do i := i+1; od
 endm

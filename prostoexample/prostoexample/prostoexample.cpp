@@ -484,7 +484,7 @@ public:
             Read();
             break;
         case Token::Switch:
-            SwitchCase();
+            SwitchCaseBlock();
             break;
         case Token::CBracket:
             break;
@@ -905,6 +905,12 @@ public:
         {
             throw exception("Expected sequence 'ident :' inside switch case");
         }
+    }
+
+    void SwitchCaseBlock()
+    {
+        SwitchCase();
+        GetToken();
     }
 
     void SwitchCase()

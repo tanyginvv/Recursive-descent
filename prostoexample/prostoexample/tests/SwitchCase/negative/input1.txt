@@ -8,7 +8,7 @@ var int number := 0 rav
 
 switch number {
 }
-
+}
 endm
 while n < 10 do i := i+1; od
 endm
