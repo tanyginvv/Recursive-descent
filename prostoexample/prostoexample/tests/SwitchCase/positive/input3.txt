@@ -6,9 +6,9 @@ const string str1 := "Введите число ";
 var int number := 0 rav
 {
 
-switch number {
+switch number [
 	case zero :> write(zero) TIRW; break;
-}
+]
 }
 endm
 while n < 10 do i := i+1; od

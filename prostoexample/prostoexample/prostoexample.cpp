@@ -58,6 +58,8 @@ enum class Token {
     Switch,
     Colon,
     Break,
+    QOBracket,
+    QCBracket
 };
 map<Token, string> tokenToString = {
     {Token::Const, "Const"},
@@ -97,6 +99,8 @@ map<Token, string> tokenToString = {
     {Token::ClBracket, "ClBracket"},
     {Token::OBracket, "OBracket"},
     {Token::CBracket, "CBracket"},
+    {Token::QOBracket, "QOBracket"},
+    {Token::QCBracket, "QCBracket"},
     {Token::Quote, "Quote"},
     {Token::Daer, "Daer"},
     {Token::Tirw, "Tirw"},
@@ -153,6 +157,8 @@ std::map<std::string, Token> keywords = {
 std::map<std::string, Token> separators = {
     std::make_pair(toLower("("), Token::OpBracket),
     std::make_pair(toLower(")"), Token::ClBracket),
+    std::make_pair(toLower("["), Token::QOBracket),
+    std::make_pair(toLower("]"), Token::QCBracket),
     std::make_pair(toLower("{"), Token::OBracket),
     std::make_pair(toLower("}"), Token::CBracket),
     std::make_pair(toLower(";"), Token::Semicolon),
@@ -910,18 +916,18 @@ public:
     void SwitchCaseBlock()
     {
         SwitchCase();
-        GetToken();
+        //GetToken();
     }
 
     void SwitchCase()
     {
-        if (token == Token::Switch && GetToken() == Token::Ident && GetToken() == Token::OBracket)
+        if (token == Token::Switch && GetToken() == Token::Ident && GetToken() == Token::QOBracket)
         {
             const unsigned CaseCountLimit = 1000;
             for (unsigned caseNumber = 0; caseNumber <= CaseCountLimit; caseNumber++)
             {
                 token = GetToken();
-                if (token == Token::CBracket)
+                if (token == Token::QCBracket)
                 {
                     if (caseNumber == 0)
                     {
@@ -939,13 +945,13 @@ public:
                 else if (token == Token::Default)
                 {
                     CaseBody();
-                    if (GetToken() == Token::CBracket)
+                    if (GetToken() == Token::QCBracket)
                     {
                         return;
                     } 
                     else
                     {
-                        throw exception("Expected '}' after default case !'");
+                        throw exception("Expected ']' after default case !'");
                     }
                 }
                 else if (token == Token::Case)
@@ -967,7 +973,7 @@ public:
         }
         else
         {
-            throw exception("Expected sequence 'switch ident {'");
+            throw exception("Expected sequence 'switch ident ['");
         }
     }
 };
