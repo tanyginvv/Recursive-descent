@@ -4,14 +4,11 @@ const string str1 := "Введите число ";
       string colon := ":" noc
 var int number := 0 rav
 {
-for(int i := 1 ; i < number ; i+1) 
 
-
-if i == number then write(i) TIRW else write(i) TIRW fi
-write("Программа завершена") TIRW
-write(str1) TIRW
-}
-rof
+switch number [
+	case zero :> write(zero) TIRW; break;
+]
+write(a) tirw
 }
 endm
 while n < 10 do i := i+1; od
