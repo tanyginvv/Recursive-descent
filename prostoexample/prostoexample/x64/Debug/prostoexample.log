@@ -1,3 +1,4 @@
 ﻿  prostoexample.cpp
-D:\study\TYAP-compilyator\prostoexample\prostoexample\prostoexample.cpp(817,1): warning C4715: Lexer::MakeToken: значение возвращается не при всех путях выполнения
+D:\study\TYAP-compilyator\prostoexample\prostoexample\prostoexample.cpp(852,1): warning C4715: Lexer::MakeToken: значение возвращается не при всех путях выполнения
+  LINK : не найден или не выполнена сборка D:\study\TYAP-compilyator\prostoexample\x64\Debug\prostoexample.exe при последней инкрементной компоновке; выполняется полная компоновка
   prostoexample.vcxproj -> D:\study\TYAP-compilyator\prostoexample\x64\Debug\prostoexample.exe

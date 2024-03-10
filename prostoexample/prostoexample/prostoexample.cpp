@@ -371,15 +371,49 @@ public:
         ExprPrime();
     }
 
+    void CheckPrefix()
+    {
+        //if (toke)
+        //token = GetToken();
+        //int tempCount = count;
+        auto nextToken = tokenList[count];
+        if ((nextToken == Token::Minus && token == Token::Minus) ||
+            (nextToken == Token::Plus && token == Token::Plus))
+        {
+            token = GetToken();
+            //F();
+        }
+        else if (token == Token::Plus && nextToken != Token::Plus)
+            throw runtime_error("prefix exception");
+    }
+
+    void CheckPostfix()
+    {
+        auto nextToken = tokenList[count];
+        if ((nextToken == Token::Minus && token == Token::Minus) ||
+            (nextToken == Token::Plus && token == Token::Plus))
+        {
+            token = GetToken();
+            token = GetToken();
+        }
+        else if (token == Token::Minus && nextToken != Token::Minus)
+            throw runtime_error("postfix exception");
+    }
+
     void F()
     {
         token = GetToken();
         if (
             token == Token::Minus
-            || token == Token::Not
+            || token == Token::Not || token == Token::Plus
             )
         {
+            /*if (token == Token::Not)
+                F();*/
+            CheckPrefix();
             F();
+            //prevToken = token;
+            //if (token == Token::Minus || )
         }
         else if (token == Token::OpBracket)
         {
@@ -394,10 +428,11 @@ public:
         }
         else if (
             token == Token::Numb
-            || token == Token::Ident || token == Token ::String || token == Token::Char
+            || token == Token::Ident || token == Token::String || token == Token::Char
             )
         {
             token = GetToken();
+            CheckPostfix();
             return;
         }
         else
