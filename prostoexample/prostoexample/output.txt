@@ -1,2 +1,1 @@
-	8 --- position 1
 EOF --- End of File

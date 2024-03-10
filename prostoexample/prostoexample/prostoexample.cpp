@@ -395,6 +395,8 @@ public:
         {
             token = GetToken();
             token = GetToken();
+            if (token == Token::Minus)
+                F();
         }
         else if (token == Token::Minus && nextToken != Token::Minus)
             throw runtime_error("postfix exception");
@@ -419,7 +421,13 @@ public:
         {
             SimpleExpr();
             if (token == Token::ClBracket) {
-                return;
+                token = GetToken();
+                if (token == Token::Minus)
+                    F();
+                else
+                    return;
+                //F();
+                //return;
             }
             else
             {
