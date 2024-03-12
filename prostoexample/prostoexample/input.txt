@@ -5,10 +5,7 @@ const string str1 := "Введите число ";
 var int number := i++ rav
 {
 Write(a, "d", b1) tirw;
-for(int i := 0; i<n;i++) write(a) tirw  read(a) dear rof
-while i < a do b := i++; read(a) dear od
 
+repeat read(a) dear tea until a < 20;
 }
-endm
-
 endm

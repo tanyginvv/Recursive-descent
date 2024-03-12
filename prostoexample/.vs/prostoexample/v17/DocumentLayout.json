@@ -7,10 +7,7 @@
       "RelativeMoniker": "D:0:0:{E2A525CE-0205-48CE-BE34-459CD7F3C65A}|prostoexample\\prostoexample.vcxproj|solutionrelative:prostoexample\\prostoexample.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\79027\\Downloads\\prostoexample.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\79027\\Downloads\\readwrite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\79027\\Downloads\\RepeatParser.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -20,27 +17,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "prostoexample.cpp",
-              "DocumentMoniker": "C:\\Users\\79027\\Downloads\\prostoexample.cpp",
-              "ToolTip": "C:\\Users\\79027\\Downloads\\prostoexample.cpp",
-              "ViewState": "AQIAADgBAAAAAAAAAAAIwE8BAAAFAAAA",
+              "Title": "RepeatParser.cpp",
+              "DocumentMoniker": "C:\\Users\\79027\\Downloads\\RepeatParser.cpp",
+              "ToolTip": "C:\\Users\\79027\\Downloads\\RepeatParser.cpp",
+              "ViewState": "AQIAAE4AAAAAAAAAAAAAAFIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-03-05T18:42:53.306Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "readwrite.cpp",
-              "DocumentMoniker": "C:\\Users\\79027\\Downloads\\readwrite.cpp",
-              "ToolTip": "C:\\Users\\79027\\Downloads\\readwrite.cpp",
-              "ViewState": "AQIAAGAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-02-28T13:05:14.393Z",
+              "WhenOpened": "2024-03-12T18:15:53.411Z",
               "EditorCaption": ""
             },
             {
@@ -49,9 +36,9 @@
               "Title": "prostoexample.cpp",
               "DocumentMoniker": "D:\\study\\TYAP-compilyator\\prostoexample\\prostoexample\\prostoexample.cpp",
               "RelativeDocumentMoniker": "prostoexample\\prostoexample.cpp",
-              "ToolTip": "D:\\study\\TYAP-compilyator\\prostoexample\\prostoexample\\prostoexample.cpp*",
-              "RelativeToolTip": "prostoexample\\prostoexample.cpp*",
-              "ViewState": "AQIAAJICAAAAAAAAAAAWwKICAAATAAAA",
+              "ToolTip": "D:\\study\\TYAP-compilyator\\prostoexample\\prostoexample\\prostoexample.cpp",
+              "RelativeToolTip": "prostoexample\\prostoexample.cpp",
+              "ViewState": "AQIAALkDAAAAAAAAAAApwNgDAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-02-20T19:03:24.486Z",
               "EditorCaption": ""

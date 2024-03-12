@@ -59,7 +59,11 @@ enum class Token {
     Colon,
     Break,
     QOBracket,
-    QCBracket
+    QCBracket,
+    Repeat,
+    Until,
+    Tea,
+    EndVector
 };
 map<Token, string> tokenToString = {
     {Token::Const, "Const"},
@@ -114,6 +118,10 @@ map<Token, string> tokenToString = {
     {Token::Case, "Case"},
     {Token::Switch, "Switch"},
     {Token::Break, "Break"},
+    {Token::Until, "Until"},
+    {Token::Repeat, "Repeat"},
+    {Token::Tea, "Tea"},
+    {Token::EndVector, "EndVector" }
 };
 
 string toLower(string str) {
@@ -152,7 +160,11 @@ std::map<std::string, Token> keywords = {
     std::make_pair(toLower("break"), Token::Break),
     std::make_pair(toLower("default"), Token::Default),
     std::make_pair(toLower("case"), Token::Case),
-    std::make_pair(toLower("switch"), Token::Switch)
+    std::make_pair(toLower("switch"), Token::Switch),
+    std::make_pair(toLower("Repeat"), Token::Repeat),
+    std::make_pair(toLower("Until"), Token::Until),
+     std::make_pair(toLower("Tea"), Token::Tea)
+
 };
 
 std::map<std::string, Token> separators = {
@@ -196,6 +208,7 @@ private:
         token = tokenList[count++];
         return token;
     }
+
 public:
     Lexer(const string& filename) : lineNumber(0), currentPosition(0) {
         inputFile.open(filename);
@@ -207,6 +220,15 @@ public:
         outputFile.close();
     }
    
+    Token GetMoreTokens() {
+        if (count < tokenList.size()) {
+            return tokenList[count++];
+        }
+        else {
+            return Token::EndVector;
+        }
+    }
+
     Token GetToken() {
         return getNextToken();
     }
@@ -279,7 +301,6 @@ public:
         else if (token == Token::Type)
         {
             SectionConst();
-          //  token = GetToken();
             if (token == Token::Noc)
                 return;
             else if (token == Token::Semicolon)
@@ -312,16 +333,11 @@ public:
 
     void TermPrime()
     {
-     //   token = GetToken();
         if (CheckMul())
         {
             F();
             TermPrime();
         }
-       /* else if (token != Token::Separator)
-        {
-            throw exception("excepted separator");
-        }*/
     }
 
     void Term()
@@ -358,7 +374,6 @@ public:
 
     void ExprPrime()
     {
-     //   token = GetToken();
         if (CheckRelation())
         {
             SimpleExpr();
@@ -374,15 +389,11 @@ public:
 
     void CheckPrefix()
     {
-        //if (toke)
-        //token = GetToken();
-        //int tempCount = count;
         auto nextToken = tokenList[count];
         if ((nextToken == Token::Minus && token == Token::Minus) ||
             (nextToken == Token::Plus && token == Token::Plus))
         {
             token = GetToken();
-            //F();
         }
         else if (token == Token::Plus && nextToken != Token::Plus)
             throw runtime_error("prefix exception");
@@ -411,12 +422,8 @@ public:
             || token == Token::Not || token == Token::Plus
             )
         {
-            /*if (token == Token::Not)
-                F();*/
             CheckPrefix();
             F();
-            //prevToken = token;
-            //if (token == Token::Minus || )
         }
         else if (token == Token::OpBracket)
         {
@@ -427,8 +434,6 @@ public:
                     F();
                 else
                     return;
-                //F();
-                //return;
             }
             else
             {
@@ -460,8 +465,6 @@ public:
 
         Expr();
 
-        //token = GetToken();
-
         if (token != Token::Semicolon)
         {
             throw exception("excepted ';'");
@@ -470,7 +473,7 @@ public:
 
     void A()
     {
-        token = GetToken();
+       // token = GetToken();
 
         if (token == Token::Semicolon)
         {
@@ -478,16 +481,17 @@ public:
         }
         else if (token == Token::Else)
         {
-            St();
+            ListStmsElse();
         }
-        else throw exception("Che napisat'-to?");
+        else {
+            ListStmsElse();
+        }
+        //else throw exception("Che napisat'-to?");
     }
 
     void If()
     {
         Expr();
-
-        //token = GetToken();
 
         if (token != Token::Then)
         {
@@ -495,7 +499,7 @@ public:
             return;
         }
 
-        St();
+        ListStmsElse();
         A();
 
         token = GetToken();
@@ -547,17 +551,42 @@ public:
         case Token::Od:
             return;
             break;
+        case Token::Fi:
+            return;
+            break;
+        case Token::Tea:
+            return;
+            break;
+        case Token::Repeat:
+            Repeat();
+            break;
+        case Token::Until:
+            return;
+            break;
         default:
             throw exception("St error");
             break;
         }
     }
+
+    //Repeat
+    void Repeat() {
+        if (token != Token::Repeat)
+        {
+            throw exception("Expected 'Repeat'");
+        }
+        ListStmsElse();
+        if (GetToken() != Token::Until)
+        {
+            throw exception("Expected 'Until'");
+        }
+        Expr();
+    }
+
     void ListStms()
     {
 
         St();
-
-        //token = GetToken();
 
         if (token != Token::CBracket)
         {
@@ -574,9 +603,7 @@ public:
 
         St();
 
-        //token = GetToken();
-
-        if ((token != Token::Rof) && (token != Token::Od))
+        if ((token != Token::Rof) && (token != Token::Od) && (token != Token::Fi) && (token != Token::Tea))
         {
             if (count == tokenList.size())
             {
@@ -596,7 +623,7 @@ public:
         }
 
         else if (token == Token::Ident) {
-            throw exception("expected comma");//обработка если нет запятой
+            throw exception("expected comma");
         }
     }
 
@@ -634,12 +661,12 @@ public:
     void ListWrite()
     {
         ElemWrite();
-        if (/*GetToken()*/token == Token::Comma)
+        if (token == Token::Comma)
         {
             ListWrite();
         }
         else if (token == Token::Ident || token == Token::String || token == Token::Char) {
-            throw exception("expected comma");//обработка если нет запятой 
+            throw exception("expected comma");
         }
 
     }
@@ -662,17 +689,13 @@ public:
 
     //while
     void While() {
-      /*  if (GetToken() != Token::While)
-        {
-            throw exception("Expected 'while'");
-        }*/
         Expr();
         if (token != Token::Do)
         {
             throw exception("Expected 'do'");
         }
         ListStmsElse();
-        if (token != Token::Od)//НЕ ВОЗВРАЩАЕТСЯ В OD
+        if (token != Token::Od)
         {
             throw exception("Expected 'od'");
         }
@@ -729,10 +752,13 @@ public:
             throw exception("expected {");
         }
 
-        ListStms();// Анализ основных инструкций программы
+        ListStms();
 
         if (GetToken() != Token::Endm) {
             throw exception("expected endm");
+        }
+        if (GetMoreTokens() != Token::EndVector) {
+            throw exception("error you have code after endm");
         }
     }
 
@@ -957,9 +983,6 @@ public:
             ProcessStr(input, inputString, indexStr, output, tokenList);
             indexStr++;
         }
-
-        tokenList.push_back(Token::Eof);
-        output << "EOF --- End of File\n";
     }
 
     void CaseBody()
@@ -987,7 +1010,6 @@ public:
     void SwitchCaseBlock()
     {
         SwitchCase();
-        //GetToken();
     }
 
     void SwitchCase()
@@ -1054,7 +1076,6 @@ int main()
     vector<Token> tokenList;
 
     try {
-        // Начать с анализа объявлений констант и переменных
         lexer.parse();
     }
     catch (const std::exception& e) {
