@@ -122,6 +122,7 @@ string toLower(string str) {
 }
 
 std::map<std::string, Token> keywords = {
+     std::make_pair(toLower("not"), Token::Not),
     std::make_pair(toLower("main"), Token::Main),
     std::make_pair(toLower("int"), Token::Type),
     std::make_pair(toLower("char"), Token::Type),
@@ -540,6 +541,12 @@ public:
         case Token::Endm:
             throw exception("expected }");
             break;
+        case Token::Rof:
+            return;
+            break;
+        case Token::Od:
+            return;
+            break;
         default:
             throw exception("St error");
             break;
@@ -561,16 +568,35 @@ public:
             ListStms();
         }
     }
+
+    void ListStmsElse()
+    {
+
+        St();
+
+        //token = GetToken();
+
+        if ((token != Token::Rof) && (token != Token::Od))
+        {
+            if (count == tokenList.size())
+            {
+                throw exception("expected do or rof");
+            }
+            ListStmsElse();
+        }
+        else return;
+    }
     //readwrite
     void ListId()
     {
         if (GetToken() != Token::Ident)
-            throw exception("expected 'Ident'");
+            throw exception("Operator READ expected 'Ident'");
         if (GetToken() == Token::Comma) {
             ListId();
         }
-        else if ( token == Token::Ident) {
-            throw exception("expected comma");//обработка если нет запятой и за запятой любая белеберда!!!!!
+
+        else if (token == Token::Ident) {
+            throw exception("expected comma");//обработка если нет запятой
         }
     }
 
@@ -580,29 +606,25 @@ public:
             throw exception("expected '('");
         }
         ListId();
-
-        if (GetToken() != Token::ClBracket) {
+        if (token != Token::ClBracket) {
             throw exception("expected ')'");
         }
-        if (GetToken() != Token::Daer) {
+        GetToken();
+        if (token != Token::Daer) {
             throw exception("expected 'Daer'");
         }
     }
-    //Говно переделывай добавить обработку запятой могут быть несколько идентификаторов или строк некоторые gettoken пропускают
+
     void ElemWrite()
     {
         token = GetToken();
-        if (token == Token::Ident || token == Token:: String || token ==Token:: CBracket)
+        if (token == Token::Ident || token == Token::String || token == Token::CBracket || token == Token::Char)
         {
             token = GetToken();
         }
-        else if (token != Token::String )//char пропускаем если не идентификатор теряем токен
+        else if ((token != Token::String) && (token != Token::Ident) && (token != Token::Char))
         {
-            throw exception("expected 'String'");
-        }
-        else if (token != Token::Char)
-        {
-            throw exception("expected 'Char'");
+            throw exception("expected 'String' or 'Ident' or 'Char'");
         }
         else {
             token = GetToken();
@@ -612,10 +634,16 @@ public:
     void ListWrite()
     {
         ElemWrite();
-        if (/*GetToken()*/token == Token::Comma) {
+        if (/*GetToken()*/token == Token::Comma)
+        {
             ListWrite();
         }
+        else if (token == Token::Ident || token == Token::String || token == Token::Char) {
+            throw exception("expected comma");//обработка если нет запятой 
+        }
+
     }
+
 
     void Write()
     {
@@ -643,8 +671,8 @@ public:
         {
             throw exception("Expected 'do'");
         }
-        ListStms();
-        if (token == Token::Od)//НЕ ВОЗВРАЩАЕТСЯ В OD
+        ListStmsElse();
+        if (token != Token::Od)//НЕ ВОЗВРАЩАЕТСЯ В OD
         {
             throw exception("Expected 'od'");
         }
@@ -679,8 +707,8 @@ public:
             throw exception("Expected comma");
         }
         Expr();
-        ListStms();
-        if (GetToken() != Token::Rof)
+        ListStmsElse();
+        if (token != Token::Rof)
         {
             throw exception("Expected 'rof'");
         }
