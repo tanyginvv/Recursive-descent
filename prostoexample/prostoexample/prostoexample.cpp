@@ -473,8 +473,6 @@ public:
 
     void A()
     {
-       // token = GetToken();
-
         if (token == Token::Semicolon)
         {
             EmptySt();
@@ -486,7 +484,6 @@ public:
         else {
             ListStmsElse();
         }
-        //else throw exception("Che napisat'-to?");
     }
 
     void If()
