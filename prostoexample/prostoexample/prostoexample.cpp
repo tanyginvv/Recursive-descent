@@ -146,7 +146,7 @@ std::map<std::string, Token> keywords = {
     std::make_pair(toLower("const"), Token::Const),
     std::make_pair(toLower("noc"), Token::Noc),
     std::make_pair(toLower("read"), Token::Read),
-    std::make_pair(toLower("dear"), Token::Daer),
+    std::make_pair(toLower("daer"), Token::Daer),
     std::make_pair(toLower("endm"), Token::Endm),
     std::make_pair(toLower("write"), Token::Write),
     std::make_pair(toLower("tirw"), Token::Tirw),
@@ -499,7 +499,6 @@ public:
         ListStmsElse();
         A();
 
-        token = GetToken();
 
         if (token != Token::Fi)
         {
@@ -531,8 +530,14 @@ public:
         case Token::Write:
             Write();
             break;
+        case Token::Tirw:
+            return;
+            break;
         case Token::Read:
             Read();
+            break;
+        case Token::Daer:
+            return;
             break;
         case Token::Switch:
             SwitchCaseBlock();
@@ -558,6 +563,9 @@ public:
             Repeat();
             break;
         case Token::Until:
+            return;
+            break;
+        case Token::Else:
             return;
             break;
         default:
@@ -600,7 +608,7 @@ public:
 
         St();
 
-        if ((token != Token::Rof) && (token != Token::Od) && (token != Token::Fi) && (token != Token::Tea))
+        if ((token != Token::Rof) && (token != Token::Od) && (token != Token::Fi) && (token != Token::Tea) && (token != Token::Else))
         {
             if (count == tokenList.size())
             {
@@ -699,6 +707,7 @@ public:
     }
     //for
     void For()
+        //идентификатор
     {
         if (GetToken() != Token::OpBracket)
         {
@@ -726,9 +735,9 @@ public:
         {
             throw exception("Expected comma");
         }
-        Expr();
+        Expr();// ИДЕНТИФКАТОР RELation expression  во второй скобке
         ListStmsElse();
-        if (token != Token::Rof)
+        if (GetToken() != Token::Rof)
         {
             throw exception("Expected 'rof'");
         }
