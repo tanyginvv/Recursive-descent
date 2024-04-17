@@ -27,6 +27,7 @@ enum class Token {
     RParen,
     Plus,
     Or,
+    And,
     Comma,
     Noc,
     Rav,
@@ -84,6 +85,7 @@ map<Token, string> tokenToString = {
     {Token::RParen, "RParen"},
     {Token::Plus, "Plus"},
     {Token::Or, "Or"},
+     {Token::And, "And"},
     {Token::Comma, "Comma"},
     {Token::Noc, "Noc"},
     {Token::Rav, "Rav"},
@@ -181,6 +183,7 @@ std::map<std::string, Token> separators = {
     std::make_pair(toLower("+"), Token::Plus),
     std::make_pair(toLower("-"), Token::Minus),
     std::make_pair(toLower("or"), Token::Or),
+    std::make_pair(toLower("And"), Token::And),
     std::make_pair(toLower(":="), Token::Assignment),
     std::make_pair(toLower(":>"), Token::Colon)
 };
@@ -190,7 +193,8 @@ std::map<std::string, Token> Relation = {
     std::make_pair(">=", Token::Relation),
     std::make_pair("=<", Token::Relation),
     std::make_pair("<", Token::Relation),
-    std::make_pair(">", Token::Relation)
+    std::make_pair(">", Token::Relation),
+    std::make_pair("<>", Token::Relation)
 };
 
 class Lexer {
@@ -283,14 +287,25 @@ public:
 
     void SectionConst()
     {
-        if (
-            token == Token::Type
-            && GetToken() == Token::Ident
-            && GetToken() == Token::Assignment
-            )
-            Expr();
+        if (token == Token::Type)
+        {
+            if (GetToken() == Token::Ident)
+            {
+
+                if (GetToken() == Token::Assignment)
+                {
+                    Expr();
+                }
+                else
+                    throw exception(("expected Assignment given " + tokenToString[token]).c_str());
+            }
+            else
+                throw exception(("expected Ident given " + tokenToString[token]).c_str());
+        }
         else
-            throw exception("section const error");
+            throw exception(("expected Type given " + tokenToString[token]).c_str());
+
+
     }
 
     void ListSectionsConst()
@@ -306,22 +321,25 @@ public:
             else if (token == Token::Semicolon)
                 ListSectionsConst();
             else
-                throw exception("section const error1");
+                throw exception(("expected Semicolon or Noc given " + tokenToString[token]).c_str());
 
         }
+        else
+            throw exception(("expected Type or Noc given " + tokenToString[token]).c_str());
+
     }
 
     void Consts()
     {
         if (GetToken() != Token::Const)
         {
-            throw exception("expected 'Const'");
-
+            throw exception(("expected Const given " + tokenToString[token]).c_str());
         }
         ListSectionsConst();
         if (token != Token::Noc)
         {
-            throw exception("expected 'Noc'");
+            throw exception(("expected Noc given " + tokenToString[token]).c_str());
+
         }
     }
     //expression
