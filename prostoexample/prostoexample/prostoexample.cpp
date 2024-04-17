@@ -263,10 +263,10 @@ public:
                 ListId();
             }
             else
-                throw exception("section var error");
+                throw exception("expected 'Assignment' or 'Comma'");
         }
         else
-            throw exception("section var error");
+            throw exception("expected 'Type' or 'Ident'");
     }
 
     void ListSectionVars()
