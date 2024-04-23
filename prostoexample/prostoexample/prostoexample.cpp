@@ -346,7 +346,7 @@ public:
     bool CheckMul()
     {
         return token == Token::Mul || token == Token::Divine
-            || token == Token::Div || token == Token::Mod;
+            || token == Token::Div || token == Token::Mod || token == Token::And;
     }
 
     void TermPrime()
@@ -506,7 +506,19 @@ public:
 
     void If()
     {
+        if (GetToken() != Token::OpBracket)
+        {
+            throw exception("excepted 'OpBracket1'");
+            return;
+        }
+
         Expr();
+
+        if (GetToken() != Token::ClBracket)
+        {
+            throw exception("excepted 'ClBracket'");
+            return;
+        }
 
         if (token != Token::Then)
         {
