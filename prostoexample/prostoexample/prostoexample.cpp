@@ -445,7 +445,7 @@ public:
         }
         else if (token == Token::OpBracket)
         {
-            SimpleExpr();
+            Expr();
             if (token == Token::ClBracket) {
                 token = GetToken();
                 if (token == Token::Minus)
@@ -455,7 +455,7 @@ public:
             }
             else
             {
-                throw exception("f error");
+                throw exception("ClBracket expected");
             }
         }
         else if (
@@ -468,7 +468,7 @@ public:
             return;
         }
         else
-            throw exception("f error");
+            throw exception("Expected number or ident or string or char or minus or not or plus");
     }
     //if
     void Assign()
