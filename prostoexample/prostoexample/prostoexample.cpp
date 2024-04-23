@@ -514,13 +514,13 @@ public:
 
         Expr();
 
-        if (GetToken() != Token::ClBracket)
+        if (token != Token::ClBracket)
         {
             throw exception("excepted 'ClBracket'");
             return;
         }
 
-        if (token != Token::Then)
+        if (GetToken() != Token::Then)
         {
             throw exception("excepted 'then'");
             return;
@@ -724,8 +724,16 @@ public:
 
     //while
     void While() {
+        if (GetToken() != Token::OpBracket)
+        {
+            throw exception("Expected 'OpBracket'");
+        }
         Expr();
-        if (token != Token::Do)
+        if (token != Token::ClBracket)
+        {
+            throw exception("Expected 'ClBracket'");
+        }
+        if (GetToken() != Token::Do)
         {
             throw exception("Expected 'do'");
         }
@@ -737,7 +745,6 @@ public:
     }
     //for
     void For()
-        //идентификатор
     {
         if (GetToken() != Token::OpBracket)
         {
@@ -760,12 +767,20 @@ public:
         {
             throw exception("Expected semicolon");
         }
+        if (GetToken() != Token::Ident)
+        {
+            throw exception("Expected identi");
+        }
+        if (GetToken() != Token::Relation)
+        {
+            throw exception("Expected relation");
+        }
         Expr();
         if (token != Token::Semicolon)
         {
             throw exception("Expected comma");
         }
-        Expr();// ИДЕНТИФКАТОР RELation expression  во второй скобке
+        Expr();
         ListStmsElse();
         if (GetToken() != Token::Rof)
         {
